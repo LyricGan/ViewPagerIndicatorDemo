@@ -153,7 +153,6 @@ public class IconPageIndicator extends HorizontalScrollView implements PageIndic
         }
         mSelectedIndex = item;
         mViewPager.setCurrentItem(item);
-
         int tabCount = mIconsLayout.getChildCount();
         for (int i = 0; i < tabCount; i++) {
             View child = mIconsLayout.getChildAt(i);

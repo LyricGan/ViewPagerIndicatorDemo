@@ -58,16 +58,17 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
     private boolean mIsDragging;
 
     private final Runnable mFadeRunnable = new Runnable() {
-      @Override public void run() {
-        if (!mFades) return;
+        @Override
+        public void run() {
+            if (!mFades) return;
 
-        final int alpha = Math.max(mPaint.getAlpha() - mFadeBy, 0);
-        mPaint.setAlpha(alpha);
-        invalidate();
-        if (alpha > 0) {
-          postDelayed(this, FADE_FRAME_MS);
+            final int alpha = Math.max(mPaint.getAlpha() - mFadeBy, 0);
+            mPaint.setAlpha(alpha);
+            invalidate();
+            if (alpha > 0) {
+                postDelayed(this, FADE_FRAME_MS);
+            }
         }
-      }
     };
 
     public UnderlinePageIndicator(Context context) {
@@ -100,7 +101,7 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
 
         Drawable background = a.getDrawable(R.styleable.UnderlinePageIndicator_android_background);
         if (background != null) {
-          setBackgroundDrawable(background);
+            setBackgroundDrawable(background);
         }
 
         a.recycle();
@@ -155,7 +156,6 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         if (mViewPager == null) {
             return;
         }
@@ -163,12 +163,10 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
         if (count == 0) {
             return;
         }
-
         if (mCurrentPage >= count) {
             setCurrentItem(count - 1);
             return;
         }
-
         final int paddingLeft = getPaddingLeft();
         final float pageWidth = (getWidth() - paddingLeft - getPaddingRight()) / (1f * count);
         final float left = paddingLeft + pageWidth * (mCurrentPage + mPositionOffset);
@@ -192,28 +190,23 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
                 mActivePointerId = MotionEventCompat.getPointerId(ev, 0);
                 mLastMotionX = ev.getX();
                 break;
-
             case MotionEvent.ACTION_MOVE: {
                 final int activePointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
                 final float x = MotionEventCompat.getX(ev, activePointerIndex);
                 final float deltaX = x - mLastMotionX;
-
                 if (!mIsDragging) {
                     if (Math.abs(deltaX) > mTouchSlop) {
                         mIsDragging = true;
                     }
                 }
-
                 if (mIsDragging) {
                     mLastMotionX = x;
                     if (mViewPager.isFakeDragging() || mViewPager.beginFakeDrag()) {
                         mViewPager.fakeDragBy(deltaX);
                     }
                 }
-
                 break;
             }
-
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
                 if (!mIsDragging) {
@@ -221,7 +214,6 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
                     final int width = getWidth();
                     final float halfWidth = width / 2f;
                     final float sixthWidth = width / 6f;
-
                     if ((mCurrentPage > 0) && (ev.getX() < halfWidth - sixthWidth)) {
                         if (action != MotionEvent.ACTION_CANCEL) {
                             mViewPager.setCurrentItem(mCurrentPage - 1);
@@ -234,19 +226,16 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
                         return true;
                     }
                 }
-
                 mIsDragging = false;
                 mActivePointerId = INVALID_POINTER;
                 if (mViewPager.isFakeDragging()) mViewPager.endFakeDrag();
                 break;
-
             case MotionEventCompat.ACTION_POINTER_DOWN: {
                 final int index = MotionEventCompat.getActionIndex(ev);
                 mLastMotionX = MotionEventCompat.getX(ev, index);
                 mActivePointerId = MotionEventCompat.getPointerId(ev, index);
                 break;
             }
-
             case MotionEventCompat.ACTION_POINTER_UP:
                 final int pointerIndex = MotionEventCompat.getActionIndex(ev);
                 final int pointerId = MotionEventCompat.getPointerId(ev, pointerIndex);
@@ -257,7 +246,6 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
                 mLastMotionX = MotionEventCompat.getX(ev, MotionEventCompat.findPointerIndex(ev, mActivePointerId));
                 break;
         }
-
         return true;
     }
 
@@ -277,7 +265,8 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
         mViewPager.setOnPageChangeListener(this);
         invalidate();
         post(new Runnable() {
-            @Override public void run() {
+            @Override
+            public void run() {
                 if (mFades) {
                     post(mFadeRunnable);
                 }
@@ -309,7 +298,6 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
     @Override
     public void onPageScrollStateChanged(int state) {
         mScrollState = state;
-
         if (mListener != null) {
             mListener.onPageScrollStateChanged(state);
         }
@@ -354,7 +342,7 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
 
     @Override
     public void onRestoreInstanceState(Parcelable state) {
-        SavedState savedState = (SavedState)state;
+        SavedState savedState = (SavedState) state;
         super.onRestoreInstanceState(savedState.getSuperState());
         mCurrentPage = savedState.currentPage;
         requestLayout();
@@ -386,7 +374,6 @@ public class UnderlinePageIndicator extends View implements PageIndicator {
             dest.writeInt(currentPage);
         }
 
-        @SuppressWarnings("UnusedDeclaration")
         public static final Creator<SavedState> CREATOR = new Creator<SavedState>() {
             @Override
             public SavedState createFromParcel(Parcel in) {
